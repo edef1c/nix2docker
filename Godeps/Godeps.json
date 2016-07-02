@@ -1,0 +1,12 @@
+{
+	"ImportPath": "github.com/edef1c/nix2docker",
+	"GoVersion": "go1.6",
+	"GodepVersion": "v62",
+	"Deps": [
+		{
+			"ImportPath": "github.com/docker/docker/pkg/tarsum",
+			"Comment": "v1.10.3",
+			"Rev": "20f81dde9bd97c86b2d0e33bbbf1388018611929"
+		}
+	]
+}
