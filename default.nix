@@ -1,5 +1,5 @@
 { go }:
-{ name ? null, contents, dockerConfig }:
+{ name ? null, repository, contents, dockerConfig }:
 let
   nix2docker = go.stdenv.mkDerivation {
     name = "nix2docker";
@@ -21,7 +21,7 @@ go.stdenv.mkDerivation {
   passAsFile = [ "config" ];
   exportReferencesGraph = [ "closure" contents ];
   config = builtins.toJSON {
-    Repository = "bash";
+    Repository = repository;
     Paths = [ contents ];
     Graphs = [ "closure" ];
     DockerConfig = dockerConfig;
