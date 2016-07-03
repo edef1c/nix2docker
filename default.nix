@@ -16,6 +16,7 @@ let
 in
 go.stdenv.mkDerivation {
   name = "${name'}.tar.gz";
+  preferLocalBuild = true;
 
   buildCommand = nix2docker;
   passAsFile = [ "config" ];
