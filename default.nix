@@ -1,7 +1,9 @@
-{ go }:
+{ go }: with go.stdenv.lib;
 { name ? null, repository, contents, dockerConfig }:
 let
-  nix2docker = go.stdenv.mkDerivation {
+  stdenv = go.stdenv;
+  hashOf = path: head (splitString "-" (removePrefix "${builtins.storeDir}/" path));
+  nix2docker = stdenv.mkDerivation {
     name = "nix2docker";
     buildInputs = [ go ];
     buildCommand = ''
@@ -13,19 +15,19 @@ let
   name' = if name != null
     then name
     else contents.name;
-in
-go.stdenv.mkDerivation {
-  name = "${name'}.tar.gz";
-  preferLocalBuild = true;
+  drv = stdenv.mkDerivation {
+    name = "${name'}.tar.gz";
+    preferLocalBuild = true;
 
-  outputs = [ "out" "tag" ];
-  buildCommand = nix2docker;
-  passAsFile = [ "config" ];
-  exportReferencesGraph = [ "closure" contents ];
-  config = builtins.toJSON {
-    Repository = repository;
-    Paths = [ contents ];
-    Graphs = [ "closure" ];
-    DockerConfig = dockerConfig;
+    outputs = [ "out" "tag" ];
+    buildCommand = nix2docker;
+    passAsFile = [ "config" ];
+    exportReferencesGraph = [ "closure" contents ];
+    config = builtins.toJSON {
+      Repository = repository;
+      Paths = [ contents ];
+      Graphs = [ "closure" ];
+      DockerConfig = dockerConfig;
+    };
   };
-}
+in drv // { imageName = "${repository}:${hashOf drv}"; }
