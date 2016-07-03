@@ -35,6 +35,11 @@ func parseNixPath(path string) (hash [nixHashSize]byte, name string, ok bool) {
 	return hash, name, true
 }
 
+func encodeNixHash(hash [nixHashSize]byte) string {
+	reverse(hash[:])
+	return nixBase32.EncodeToString(hash[:])
+}
+
 func reverse(buf []byte) {
 	n := len(buf)
 	for i := 0; i < n/2; i += 1 {

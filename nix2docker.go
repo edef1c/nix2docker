@@ -75,8 +75,9 @@ func main() {
 		log.Fatalf("couldn't write VERSION: %s", err)
 	}
 
+	imageTag := encodeNixHash(outHash)
 	repos := map[string]map[string]string{
-		config.Repository: {imageID: imageID},
+		config.Repository: {imageTag: imageID},
 	}
 	if err := writeJSONFile(filepath.Join(outDir, "repositories"), repos, 0644); err != nil {
 		log.Fatalf("couldn't write repositories: %s", err)
@@ -98,7 +99,7 @@ func main() {
 		log.Fatalf("couldn't write output: %s", err)
 	}
 
-	if err := ioutil.WriteFile(os.Getenv("tag"), []byte(config.Repository+":"+imageID), 0644); err != nil {
+	if err := ioutil.WriteFile(os.Getenv("tag"), []byte(config.Repository+":"+imageTag), 0644); err != nil {
 		log.Fatalf("couldn't write tag: %s", err)
 	}
 }
