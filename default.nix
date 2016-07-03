@@ -19,7 +19,6 @@ let
     name = "${name'}.tar.gz";
     preferLocalBuild = true;
 
-    outputs = [ "out" "tag" ];
     buildCommand = nix2docker;
     passAsFile = [ "config" ];
     exportReferencesGraph = [ "closure" contents ];

@@ -98,8 +98,4 @@ func main() {
 	if err != nil {
 		log.Fatalf("couldn't write output: %s", err)
 	}
-
-	if err := ioutil.WriteFile(os.Getenv("tag"), []byte(config.Repository+":"+imageTag), 0644); err != nil {
-		log.Fatalf("couldn't write tag: %s", err)
-	}
 }
