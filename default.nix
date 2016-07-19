@@ -29,4 +29,7 @@ let
       DockerConfig = dockerConfig;
     };
   };
-in drv // { imageName = "${repository}:${hashOf drv}"; }
+in drv // {
+  imageName = "${repository}:${hashOf drv}";
+  imageTag = "${hashOf drv}";
+}
