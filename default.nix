@@ -3,6 +3,7 @@
 let
   stdenv = go.stdenv;
   hashOf = path: head (splitString "-" (removePrefix "${builtins.storeDir}/" path));
+  zip = xs: ys: concatLists (zipListsWith (x: y: [x y]) xs ys);
   nix2docker = stdenv.mkDerivation {
     name = "nix2docker";
     buildInputs = [ go ];
@@ -14,18 +15,20 @@ let
   };
   name' = if name != null
     then name
-    else contents.name;
+    else (head contents').name;
+  contents' = flatten contents;
+  closures = genList (n: "closure" + optionalString (n != 0) "-${toString n}") (length contents');
   drv = stdenv.mkDerivation {
     name = "${name'}.tar.gz";
     preferLocalBuild = true;
 
     buildCommand = nix2docker;
     passAsFile = [ "config" ];
-    exportReferencesGraph = [ "closure" contents ];
+    exportReferencesGraph = zip closures contents';
     config = builtins.toJSON {
       Repository = repository;
-      Paths = [ contents ];
-      Graphs = [ "closure" ];
+      Paths = contents';
+      Graphs = closures;
       DockerConfig = dockerConfig;
     };
   };
