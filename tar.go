@@ -79,7 +79,7 @@ func PackTarWalkFunc(w *tar.Writer, rel string) filepath.WalkFunc {
 	}
 }
 
-func PackTarForestWalkFunc(w *tar.Writer, rel string) filepath.WalkFunc {
+func PackTarForestWalkFunc(w *tar.Writer, s map[string]struct{}, rel string) filepath.WalkFunc {
 	return func(path string, fi os.FileInfo, err error) error {
 		hdr := tar.Header{
 			Name:  filepath.ToSlash(path),
@@ -91,6 +91,13 @@ func PackTarForestWalkFunc(w *tar.Writer, rel string) filepath.WalkFunc {
 			if hdr.Name, err = filepath.Rel(rel, hdr.Name); err != nil {
 				return err
 			}
+		}
+
+		if s != nil {
+			if _, exists := s[hdr.Name]; exists {
+				return nil
+			}
+			s[hdr.Name] = struct{}{}
 		}
 
 		fm := fi.Mode()

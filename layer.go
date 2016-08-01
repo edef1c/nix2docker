@@ -28,8 +28,9 @@ func PackLayer(w io.Writer, g Graph, paths []string) error {
 	sort.Strings(paths)
 
 	tarWriter := tar.NewWriter(w)
+	s := make(map[string]struct{})
 	for _, path := range paths {
-		if err := filepath.Walk(path, PackTarForestWalkFunc(tarWriter, path)); err != nil {
+		if err := filepath.Walk(path, PackTarForestWalkFunc(tarWriter, s, path)); err != nil {
 			return err
 		}
 	}
