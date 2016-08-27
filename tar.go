@@ -23,7 +23,7 @@ func PackTarWalkFunc(w *tar.Writer, rel string) filepath.WalkFunc {
 
 		hdr := tar.Header{
 			Name:  path,
-			Mode:  0644,
+			Mode:  0444,
 			Uname: "root",
 			Gname: "root",
 		}
@@ -83,7 +83,7 @@ func PackTarForestWalkFunc(w *tar.Writer, s map[string]struct{}, rel string) fil
 	return func(path string, fi os.FileInfo, err error) error {
 		hdr := tar.Header{
 			Name:  filepath.ToSlash(path),
-			Mode:  0644,
+			Mode:  0444,
 			Uname: "root",
 			Gname: "root",
 		}
