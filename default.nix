@@ -1,4 +1,4 @@
-{ go }: with go.stdenv.lib;
+{ go_1_9 }: let go = go_1_9; in with go.stdenv.lib;
 { name ? null, repository, contents, dockerConfig }:
 let
   stdenv = go.stdenv;
